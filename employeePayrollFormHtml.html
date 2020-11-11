@@ -18,7 +18,7 @@
             </div>
         </header>
         <div class="form-content">
-            <form class="form" action="#" onsubmit=save();return false>
+            <form class="form" action="#" onsubmit="save();return false" media = "all">
                 <div class="form-head">
                     Employee payroll Form
                 </div>
@@ -145,9 +145,24 @@
                         </select>
                     </div>
                 </div>
+                <div class="row-content">
+                    <label class="label text" for="notes">Notes</label>
+                    <textarea id="notes" class="input" name="Notes" placeholder="" style="height:100px"></textarea>
+                </div>
+                <div class="button-parent">
+                    <button type="button" class="label text resetButton button cancelButton" onclick="myFunction();" media="all">Cancel</button>
+                    <div class="submit-reset">
+                        <button type="submit" class="label text button submitButton" id="submitButton" media="all">Submit</button>
+                        <button type="reset" class="label text resetButton button" media="all">Reset</button>
+                    </div>
+                </div>
             </form>
         </div>
         <script>
+            function myFunction(){
+                location.href="./employeePayrollFormHtml.html";
+            }
+
             const salary = document.querySelector('#salary');
             const salaryOutput = document.querySelector('.salary-output');
             salaryOutput.textContent = salary.value;
@@ -155,12 +170,6 @@
                 salaryOutput.textContent = salary.value;
             });
         </script>
-        <!-- <div class="button-parent">
-            <a href="./home.html" class="resetButton button cancelButton">Cancel</a>
-            <div class="submit-reset">
-                <button type="submit" class="button submitButton" id="submitButton">Submit</button>
-                <button type="reset" class="resetButton button">Reset</button>
-            </div>
-        </div> -->
+       
     </body>
 </html>
