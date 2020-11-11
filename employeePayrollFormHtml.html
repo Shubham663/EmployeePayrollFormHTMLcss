@@ -4,7 +4,7 @@
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap">
         <title>Employee payroll form</title>
-        <link rel="stylesheet" href="demo3_employeePayrollForm.css">
+        <link rel="stylesheet" href="employeePayrollForm.css">
         <style></style>
     </head>
     <body>
@@ -20,7 +20,7 @@
         <div class="form-content">
             <form class="form" action="#" onsubmit=save();return false>
                 <div class="form-head">
-                    Employee Payroll Form
+                    Employee payroll Form
                 </div>
                 <div class="row-content">
                     <label class="label text" for="name">Name</label>
@@ -51,8 +51,51 @@
                         </label>
                     </div>
                 </div>
+                <div class="row-content">
+                    <label class="label text" for="gender" >Gender</label>
+                    <div class="gender-radio">
+                        <label>
+                            <input type="radio" id="gender1" name="gender" value="Male" required>
+                            <p class= "gender">Male</p>
+                        </label>
+                        <label>
+                            <input type="radio" id="gender2" name="gender" value="Female" required>
+                            <p class= "gender">Female</p>
+                        </label>
+                    </div>
+                </div>
+                <div class="row-content">
+                    <label class="label text" for="department">Department</label>
+                    <div class="gender-radio">
+                        <label>
+                            <input type="checkbox" id="department1" name="department" value="Sales">
+                            <p class="gender">Sales</p>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="department1" name="department" value="Marketing">
+                            <p class="gender">Marketing</p>
+                        </label>
+                        <label>
+                            <input type="checkbox" id="department1" name="department" value="Products">
+                            <p class="gender">Products</p>
+                        </label>
+                    </div>
+                </div>
+                <div class="row-content">
+                    <label class="label text" for="salary">Salary</label>
+                    <input id = "salary" type="range" min="300000" max="500000" step="1000">
+                    <output for = "salary" class="salary-output"></output>
+                </div>
             </form>
         </div>
+        <script>
+            const salary = document.querySelector('#salary');
+            const salaryOutput = document.querySelector('.salary-output');
+            salaryOutput.textContent = salary.value;
+            salary.addEventListener('input',function(){
+                salaryOutput.textContent = salary.value;
+            });
+        </script>
         <!-- <div class="button-parent">
             <a href="./home.html" class="resetButton button cancelButton">Cancel</a>
             <div class="submit-reset">

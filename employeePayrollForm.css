@@ -109,10 +109,30 @@ label{
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-right: 35px;
 }
 
 .profile {
-    width: 40px;
+    width: 53px;
     border-radius: 50%;
     margin-left: 12px;
+}
+
+.gender {
+    width: 60px;
+    border-radius: 50%;
+    margin-left: 5px;
+    font-size: 20px;
+}
+
+.gender-radio {
+    display: flex;
+    flex-direction: row;
+}
+
+.gender-radio > label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 35px;
 }
