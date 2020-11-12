@@ -26,6 +26,7 @@
                 <div class="row-content">
                     <label class="label text" for="name">Name</label>
                     <input class="input" type="text" id="name" name="name" placeholder="your name.." required>
+                    <error-output class="text-error" for="text"></error-output> 
                 </div>
                 <div class="row-content">
                     <label class="label text" for="profile" >Profile image</label>
@@ -144,6 +145,7 @@
                             <option value="2017">2017</option>
                             <option value="2016">2016</option>
                         </select>
+                        <error-output class="select-error" for="startDate"></error-output>
                     </div>
                 </div>
                 <div class="row-content">
@@ -177,7 +179,7 @@
             salaryOutput.textContent = salary.value;
             salary.addEventListener('input',function(){
                 salaryOutput.textContent = salary.value;
-            });
+            }); 
         </script>
        
     </body>

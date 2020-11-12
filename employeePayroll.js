@@ -8,14 +8,22 @@ class EmployeePayroll{
     _startDate;
     _notes;
 
-    constructor(name,image,gender,department,salary,startDate,notes){
-        this.name = name;
-        this.image = image;
-        this.gender = gender;
-        this.department = department;
-        this.salary = salary;
-        this.startDate = startDate;
-        this.notes = notes;
+    // constructor(name,image,gender,department,salary,startDate,notes){
+    //     this.name = name;
+    //     this.image = image;
+    //     this.gender = gender;
+    //     this.department = department;
+    //     this.salary = salary;
+    //     this.startDate = startDate;
+    //     this.notes = notes;
+    // }
+
+    toString(){
+        const options = { year: 'numeric', month: 'long', day: 'numeric'};
+        const empDate = this._startDate === undefined ? "undefined" : this._startDate.toLocaleDateString("en-US",options);
+        return "Name: " + this._name + ", Image: " + this.image + 
+                "Gender: " + this._gender + ", Departments: " + this.department + 
+                "StartDate: " + this._startDate + ", Salary: " + this.salary; 
     }
 
     set name(name){
@@ -67,6 +75,38 @@ class EmployeePayroll{
     }
 }
 
+window.addEventListener('DOMContentLoaded',(event) =>{
+    const name = document.getElementById('name');
+    const textError = document.querySelector('.text-error');
+    // const textError = textErrors[0];
+    name.addEventListener('input',function(){
+        try{
+            (new EmployeePayroll()).name = name.value;
+            textError.textContent = "";
+        }catch(e){
+            textError.textContent = e;
+        }
+    });
+});
+
+window.addEventListener('DOMContentLoaded',(event) =>{
+    const date = document.getElementById('day');
+    const selectError = document.querySelector('.select-error');
+    // const textError = textErrors[0];
+    date.addEventListener('input',function(){
+        try{
+            let startDay = document.getElementById('day').value;
+            let startMonth = document.getElementById('month').value;
+            let startYear = document.getElementById('year').value;
+            let startDate = new Date(startYear+"-"+startMonth+"-"+startDay);
+            (new EmployeePayroll()).startDate = startDate;
+            selectError.textContent = "";
+        }catch(e){
+            selectError.textContent = e;
+        }
+    });
+});
+
 function save(){
     let name = document.getElementById('name').value;
     let imageSource =  document.getElementsByName('profile');
@@ -97,7 +137,15 @@ function save(){
     let startDate = new Date(startYear+"-"+startMonth+"-"+startDay);
     let notes = document.getElementById('notes').value;
     try{
-        employeePayrollList.push(new EmployeePayroll(name,imageSource2,gender2,department2,salary,startDate,notes));
+        let e1= new EmployeePayroll();
+        e1.name = name;
+        e1.image = imageSource2;
+        e1.gender = gender2;
+        e1.department = department2;
+        e1.salary = salary;
+        e1.startDate = startDate;
+        e1.notes = notes;
+        employeePayrollList.push(e1);
     }catch(e){
         console.error(e);
         return;
