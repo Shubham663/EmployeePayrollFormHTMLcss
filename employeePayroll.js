@@ -172,3 +172,42 @@ function createAndUpdateStorage(employeePayroll){
     alert(employeePayrollList2.toString());
     localStorage.setItem("EmployeePayrollList",JSON.stringify(employeePayrollList2))
 }
+
+const resetForm = () => {
+    setValue('#name','');
+    setValue('#notes','');
+    setValue('#day','1');
+    setValue('#month','January');
+    setValue('#year','2020');
+    setValue('#salary','');
+    setTextValue('.salary-output','400000')
+    unsetSelectedValues('[name=profiel]');
+    resetImage();
+}
+
+const setValue = (id,value) => {
+    const element = document.querySelector(id);
+    element.value = value;
+}
+
+const resetImage = () => {
+    let image = new Image();
+    let image5 = document.images[5];
+    image.onload = function(){
+        image5.src = this.src;
+        image5.alt = "The directory of the image selected not corrected."
+    }
+    image.src = "images/clear.gif";
+}
+
+const setTextValue = (className,value) => {
+    const element = document.querySelector(className);
+    element.textContent = value;
+}
+
+const unsetSelectedValues = (propertyValue) => {
+    let allItems = document.querySelectorAll(propertyValue);
+    allItems.forEach(item => {
+        item.checked = false;
+    });
+}
