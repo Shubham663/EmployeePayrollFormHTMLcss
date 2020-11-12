@@ -146,6 +146,7 @@ function save(){
         e1.startDate = startDate;
         e1.notes = notes;
         employeePayrollList.push(e1);
+        createAndUpdateStorage(e1);
     }catch(e){
         console.error(e);
         return;
@@ -158,4 +159,16 @@ function save(){
         image5.alt = "The directory of the image selected not corrected."
     }
     image.src = imageSource2;
+}
+
+function createAndUpdateStorage(employeePayroll){
+    let employeePayrollList2 = JSON.parse(localStorage.getItem("EmployeePayrollList"));
+    if(employeePayrollList2 != undefined){
+        employeePayrollList2.push(employeePayroll);
+    }
+    else{
+        employeePayrollList2 = [employeePayroll];
+    }
+    alert(employeePayrollList2.toString());
+    localStorage.setItem("EmployeePayrollList",JSON.stringify(employeePayrollList2))
 }
