@@ -179,6 +179,19 @@ select{
     justify-content: flex-end;
 }
 
+.imageProfile{
+    width: 7%;
+}
+
+.center{
+    justify-content: center;
+}
+
+.columnContent{
+    display: flex;
+    flex-direction: column;
+}
+
 @media only screen and (max-width: 960px){
     .cancelButton{
         margin-left: 0px;

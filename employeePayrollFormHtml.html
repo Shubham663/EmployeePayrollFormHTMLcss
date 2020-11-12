@@ -5,6 +5,7 @@
         <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600&display=swap">
         <title>Employee payroll form</title>
         <link rel="stylesheet" href="employeePayrollForm.css">
+        <script type="text/javascript" src="employeePayroll.js"></script>
         <style></style>
     </head>
     <body>
@@ -31,7 +32,7 @@
                     <div class="profile-radio-content">
                         <label>
                             <input type="radio" id="profile1" name="profile"
-                            value="images/Ellipse -3.png" required>
+                            value="./images/Ellipse -3.png" required>
                             <img  class="profile" id="image1" src="images/Ellipse -3.png">
                         </label>
                         <label>
@@ -157,6 +158,14 @@
                     </div>
                 </div>
             </form>
+        </div>
+        <div class="column-content">
+            <div class="submit-reset center">
+                <p>The profile picture selected is:<br></p>
+            </div>
+            <div class="submit-reset center">
+                <img src="clear.gif" class="imageProfile" alt="the image is not present in this directory">
+            </div>
         </div>
         <script>
             function myFunction(){
