@@ -1,4 +1,5 @@
 let employeePayrollList = new Array();
+let id=0;
 class EmployeePayroll{
     _name;
     _imageSource;
@@ -7,6 +8,7 @@ class EmployeePayroll{
     _salary;
     _startDate;
     _notes;
+    _id;
 
     // constructor(name,image,gender,department,salary,startDate,notes){
     //     this.name = name;
@@ -23,7 +25,7 @@ class EmployeePayroll{
         const empDate = this._startDate === undefined ? "undefined" : this._startDate.toLocaleDateString("en-US",options);
         return "Name: " + this._name + ", Image: " + this.image + 
                 "Gender: " + this._gender + ", Departments: " + this.department + 
-                "StartDate: " + this._startDate + ", Salary: " + this.salary; 
+                "StartDate: " + this._startDate + ", Salary: " + this.salary + ", Id: " + this._id; 
     }
 
     set name(name){
@@ -73,7 +75,16 @@ class EmployeePayroll{
     get notes(){
         return this._notes;
     }
+    set id(id){
+        this._id = id;
+    }
+    get id(){
+        return this._id;
+    }
 }
+
+let isUpdate= false;
+let employeePayrollObj = {};
 
 window.addEventListener('DOMContentLoaded',(event) =>{
     const name = document.getElementById('name');
@@ -87,6 +98,7 @@ window.addEventListener('DOMContentLoaded',(event) =>{
             textError.textContent = e;
         }
     });
+    checkForUpdates();
 });
 
 window.addEventListener('DOMContentLoaded',(event) =>{
@@ -108,6 +120,7 @@ window.addEventListener('DOMContentLoaded',(event) =>{
 });
 
 function save(){
+    let id = new Date().getTime();
     let name = document.getElementById('name').value;
     let imageSource =  document.getElementsByName('profile');
     var imageSource2;
@@ -145,13 +158,14 @@ function save(){
         e1.salary = salary;
         e1.startDate = startDate;
         e1.notes = notes;
+        e1.id = id;
         employeePayrollList.push(e1);
         createAndUpdateStorage(e1);
     }catch(e){
         console.error(e);
         return;
     }
-    console.log(employeePayrollList);
+    // console.log(employeePayrollList);
     let image = new Image();
     let image5 = document.images[5];
     image.onload = function(){
@@ -159,6 +173,8 @@ function save(){
         image5.alt = "The directory of the image selected not corrected."
     }
     image.src = imageSource2;
+    resetForm();
+    location.href = "./AddEmployee.html ";
 }
 
 function createAndUpdateStorage(employeePayroll){
@@ -211,3 +227,38 @@ const unsetSelectedValues = (propertyValue) => {
         item.checked = false;
     });
 }
+
+const checkForUpdates = () => {
+    const employeePayrollJSON = localStorage.getItem('editEmp');
+    isUpdate = employeePayrollJSON ? true:false;
+    if(!isUpdate) return;
+    employeePayrollObj = JSON.parse(employeePayrollJSON);
+    setForm();
+};
+
+const setForm = () => {
+    setValue('#name',employeePayrollObj._name);
+    setValue('#notes',employeePayrollObj._notes);
+    let date = stringify_date(employeePayrollObj._startDate).split(" ");
+    setValue('#day',date[0]);
+    setValue('#month',date[1]);
+    setValue('#year',date[2]);
+    setValue('#salary',employeePayrollObj._salary);
+    setTextValue('.salary-output',employeePayrollObj._salary)
+    setSelectedValues('[name=profile]',employeePayrollObj._imageSource);
+    setSelectedValues('[name=gender]',employeePayrollObj._gender);
+    setSelectedValues('[name=department]',employeePayrollObj._department);
+};
+
+const setSelectedValues = (propertyValue,value) => {
+    let allItems = document.querySelectorAll(propertyValue);
+    allItems.forEach((item) => {
+        if(Array.isArray(value)){
+            if(value.includes(item.value)){
+                item.checked = true;
+            }
+        }
+        else if(item.value == value)
+            item.checked = true;
+    });
+};
