@@ -200,6 +200,13 @@ error-output{
     font-style: italic;
 }
 
+.input-error{
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+    justify-content: space-between;
+}
+
 .add-button{
     font:normal normal normal 22px/29px Roboto;
     letter-spacing: 0px;

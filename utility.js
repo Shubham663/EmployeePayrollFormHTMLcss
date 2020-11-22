@@ -4,8 +4,3 @@ const stringify_date = (date) => {
                             new Date(Date.parse(date)).toLocaleDateString('en-GB',options);
     return newDate;
 };
-
-let site_prooperties = {
-    home_page: "AddEmployee.html",
-    add_emp_payroll_page: "employeePayrollFormHtml.html"
-}

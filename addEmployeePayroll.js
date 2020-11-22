@@ -1,15 +1,33 @@
 let empPayrollList;
 
 window.addEventListener('DOMContentLoaded',(event) => {
-    empPayrollList = getEmployeeDataFromLocalStorage();
-    document.querySelector('.emp-count').textContent = empPayrollList.length;
-    createInnerHtml();
-    localStorage.removeItem('editEmp');
+    getEmployeeData().then(empList => {
+        empPayrollList = empList;
+        document.querySelector('.emp-count').textContent = empPayrollList.length;
+        createInnerHtml();
+        localStorage.removeItem('editEmp');
+    });
 })
 
-const getEmployeeDataFromLocalStorage= () => {
-    return localStorage.getItem('EmployeePayrollList')?
-                        JSON.parse(localStorage.getItem('EmployeePayrollList')):[];
+const getEmployeeData = () => {
+    // Getting data from local storage when from_local is true
+    if(site_properties.from_local)
+        return new Promise((resolve,reject) => {
+            localStorage.getItem('EmployeePayrollList')?
+                resolve(JSON.parse(localStorage.getItem('EmployeePayrollList'))):resolve([]);
+        })
+        // Getting data from server when from_local is false
+    else{
+        return new Promise((resolve,reject) => {
+            const getURL = "http://localhost:3000/employees/list";
+            makePromiseCall("GET",getURL).then(responseText => {
+                resolve(JSON.parse(responseText));
+            }).catch(error => {
+                console.log("GET Error Staus: " + JSON.stringify(error));
+                resolve([]);
+            });
+        })
+    }
 };
 
 const createInnerHtml= () => {
@@ -17,17 +35,18 @@ const createInnerHtml= () => {
     if(empPayrollList.length == 0) return;
     let inHtml = `${headerHTML}`;
     for(const empPayrollData of empPayrollList){
+        // console.log(empPayrollData)
         inHtml = `${inHtml}
             <tr>
-                <td><img class="profile" alt="" src="${empPayrollData._imageSource}"></td>
-                <td>${empPayrollData._name}</td>
-                <td>${empPayrollData._gender}</td>
-                <td>${getDeptHTML(empPayrollData._department)}</td>
-                <td>${empPayrollData._salary}</td>
-                <td>${empPayrollData._startDate}</td>
+                <td><img class="profile" alt="" src="${empPayrollData.image}"></td>
+                <td>${empPayrollData.name}</td>
+                <td>${empPayrollData.gender}</td>
+                <td>${getDeptHTML(empPayrollData.department)}</td>
+                <td>${empPayrollData.salary}</td>
+                <td>${empPayrollData.startDate}</td>
                 <td>
-                    <img src="icons/delete-black-18dp.svg" alt="delete" id="${empPayrollData._id}" onclick="remove(this)">
-                    <img src="icons/create-black-18dp.svg" alt="edit" id="${empPayrollData._id}" onclick="update(this)">
+                    <img src="icons/delete-black-18dp.svg" alt="delete" id="${empPayrollData.id}" onclick="remove(this)">
+                    <img src="icons/create-black-18dp.svg" alt="edit" id="${empPayrollData.id}" onclick="update(this)">
                 </td>
             </tr>
         `;
@@ -36,6 +55,7 @@ const createInnerHtml= () => {
 }
 
 const getDeptHTML = (deptList) => {
+    // console.log(deptList);
     let deptHTML = '';
     for(const dept of deptList){
         deptHTML = `${deptHTML} <div class='dept-label'>${dept}</div>`
@@ -55,7 +75,7 @@ const createEmployeePayrollJSON = () => {
             _salary: '500000',
             _startDate: '29 Oct 2019',
             _note: '',
-            _id: new Date().getTime(),
+            id: new Date().getTime(),
             _profilePic: 'images/Ellipse -2.png'
         },
         {
@@ -67,7 +87,7 @@ const createEmployeePayrollJSON = () => {
             _salary: '400000',
             _startDate: '29 Oct 2019',
             _note: '',
-            _id: new Date().getTime() + 1,
+            id: new Date().getTime() + 1,
             _profilePic: 'images/Ellipse -1.png'
         }
     ]
@@ -77,13 +97,13 @@ const createEmployeePayrollJSON = () => {
 const remove = (node) =>{
     // console.log(node);
     // empPayrollList.forEach(element => {
-    //     console.log("Hi " + element._id);
+    //     console.log("Hi " + element.id);
     // });
-    let empPayrollData = empPayrollList.find(empData => empData._id == node.id);
+    let empPayrollData = empPayrollList.find(empData => empData.id == node.id);
     if(!empPayrollData) return;
     const index = empPayrollList
-                  .map(empData => empData._id)
-                  .indexOf(empPayrollData._id);
+                  .map(empData => empData.id)
+                  .indexOf(empPayrollData.id);
     empPayrollList.splice(index,1)
     localStorage.setItem("EmployeePayrollList",JSON.stringify(empPayrollList));
     document.querySelector(".emp-count").textContent = empPayrollList.length;
@@ -91,10 +111,10 @@ const remove = (node) =>{
 };
 
 const update = (node) => {
-    let empPayrollData = empPayrollList.find(empData => empData._id == node.id);
+    let empPayrollData = empPayrollList.find(empData => empData.id == node.id);
     if(!empPayrollData) return;
     localStorage.setItem("editEmp",JSON.stringify(empPayrollData));
-    remove(node);
+    // remove(node);
     myfunc();
 };
 
