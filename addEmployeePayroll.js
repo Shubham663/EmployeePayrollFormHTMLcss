@@ -101,12 +101,23 @@ const remove = (node) =>{
     // });
     let empPayrollData = empPayrollList.find(empData => empData.id == node.id);
     if(!empPayrollData) return;
-    const index = empPayrollList
-                  .map(empData => empData.id)
-                  .indexOf(empPayrollData.id);
-    empPayrollList.splice(index,1)
-    localStorage.setItem("EmployeePayrollList",JSON.stringify(empPayrollList));
-    document.querySelector(".emp-count").textContent = empPayrollList.length;
+    if(site_properties.from_local == true){
+        const index = empPayrollList
+                    .map(empData => empData.id)
+                    .indexOf(empPayrollData.id);
+        empPayrollList.splice(index,1)
+        localStorage.setItem("EmployeePayrollList",JSON.stringify(empPayrollList));
+        document.querySelector(".emp-count").textContent = empPayrollList.length;
+    }
+    else{
+        const deleteURL = "http://localhost:3000/employees/";
+        makePromiseCall("DELETE",(deleteURL+empPayrollData.id),true).then(responseText => {
+            document.querySelector(".emp-count").textContent = empPayrollList.length-1;
+            console.log("Successfully deleted " + empPayrollData.name);
+        }).catch(error => {
+            console.log("DELETE Error Staus: " + JSON.stringify(error));
+        })
+    }
     createInnerHtml();
 };
 
