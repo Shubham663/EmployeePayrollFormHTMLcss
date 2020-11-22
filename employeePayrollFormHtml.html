@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="employeePayrollForm.css">
         <script type="text/javascript" src="employeePayroll.js"></script>
         <script type="text/javascript" src="utility.js"></script>
+        <script type="text/javascript" src="site_properties.js"></script>
         <style></style>
     </head>
     <body>
@@ -26,8 +27,10 @@
                 </div>
                 <div class="row-content">
                     <label class="label text" for="name">Name</label>
-                    <input class="input" type="text" id="name" name="name" placeholder="your name.." required>
-                    <error-output class="text-error" for="text"></error-output> 
+                    <div class="input-error">
+                        <input class="input" type="text" id="name" name="name" placeholder="your name.." required>
+                        <error-output class="text-error" for="text"></error-output>
+                    </div> 
                 </div>
                 <div class="row-content">
                     <label class="label text" for="profile" >Profile image</label>
