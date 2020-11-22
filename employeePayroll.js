@@ -216,16 +216,16 @@ function createAndUpdateStorage(employeePayroll){
     else{
         let postURL = "http://localhost:3000/employees/";
         console.log("getting list from server")
-        getPayrollListServer(employeePayrollList2).then(responseText =>{
-            console.log(employeePayrollList2);
+        getPayrollListServer().then(responseText =>{
+            console.log(responseText);
+            employeePayrollList2 = responseText;
             if(employeePayrollList2 != undefined){
-                console.log(employeePayroll.id)
                 let employeePayrollData;
-                employeePayrollList2.forEach(empData => {
+                for(let empData of employeePayrollList2){
                     if(empData.id == employeePayroll.id)
-                        employeePayrollData = employeePayroll
-                });
-                if(employeePayrollData != undefined){
+                        employeePayrollData = employeePayroll;
+                }
+                if(!employeePayrollData){
                     console.log("correct place injection")
                         makePromiseCall("POST",postURL,true,employeePayroll).then(responseText => {
                             console.log("Even reaches here");
@@ -257,13 +257,12 @@ function createAndUpdateStorage(employeePayroll){
     }
 }
 
-const getPayrollListServer = (employeePayrollList) => {
+const getPayrollListServer = () => {
     const getURL = "http://localhost:3000/employees/list";
         return new Promise((resolve,reject) => {
             makePromiseCall("GET",getURL).then(responseText => {
                 console.log("Response successfully retrieved");
-                employeePayrollList = JSON.parse(responseText);
-                resolve();
+                resolve(JSON.parse(responseText));
             }).catch(error => {
                 console.log("GET Error Staus: " + JSON.stringify(error));
                 employeePayrollList = [];
