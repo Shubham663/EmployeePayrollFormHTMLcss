@@ -10,6 +10,9 @@
 //     _notes;
 //     id;
 
+// const { rejects } = require("assert");
+// const { resolve } = require("path");
+
 //     // constructor(name,image,gender,department,salary,startDate,notes){
 //     //     this.name = name;
 //     //     this.image = image;
@@ -90,13 +93,13 @@ window.addEventListener('DOMContentLoaded',(event) =>{
     const textError = document.querySelector('.text-error');
     // const textError = textErrors[0];
     name.addEventListener('input',function(){
-        try{
-            (new EmployeePayroll()).name = name.value;
-            textError.textContent = "";
-        }catch(e){
-            textError.textContent = e;
+            const pattern = RegExp("[A-Z]{1}.{2,}");
+            if(pattern.test(name.value))
+                textError.textContent = "";
+            else
+                textError.textContent = "The name provided is not valid";
         }
-    });
+    );
     checkForUpdates();
 });
 
@@ -105,13 +108,16 @@ window.addEventListener('DOMContentLoaded',(event) =>{
     const selectError = document.querySelector('.select-error');
     dateArray.forEach((item) => {
         item.addEventListener('input',function(){
-            try{
                 let startDate = getDate();
-                (new EmployeePayroll()).startDate = startDate;
-                selectError.textContent = "";
-            }catch(e){
-                selectError.textContent = e;
-            }
+                let d = new Date();
+                d.setDate(d.getDate()-30);
+                let e = new Date();
+                if(startDate <= d)
+                    selectError.textContent = "start date cannot be more than 30 days before than joining date"
+                else if(startDate <= e)
+                    selectError.textContent = "";
+                else 
+                    selectError.textContent = "You entered start date sometime in future";
         });
     });
 })
@@ -124,7 +130,6 @@ function save(){
     }
     createAndUpdateStorage(employeePayrollObj);
     resetForm();
-    location.href = "./AddEmployee.html ";
 }
 
 const getSelectedValue = (name) => {
@@ -174,13 +179,8 @@ const createEmployeePayrollObject = () => {
         employeePayrollObj.salary = salary;
         employeePayrollObj.startDate = startDate;
         employeePayrollObj.notes = notes;
-        if(!isUpdate && site_properties.from_local ==true){
+        if(site_properties.from_local ==true && !isUpdate){
             employeePayrollObj.id = id;
-        }
-        else{
-            console.log("isUpdate still set");
-            employeePayrollObj.id = employeePayrollObj.id;
-            console.log(employeePayrollObj)
         }
         // employeePayrollList.push(employeePayrollObj);
         // return employeePayrollObj;
@@ -191,23 +191,80 @@ const createEmployeePayrollObject = () => {
 }
 
 function createAndUpdateStorage(employeePayroll){
-    let employeePayrollList2 = JSON.parse(localStorage.getItem("EmployeePayrollList"));
-    if(employeePayrollList2 != undefined){
-        let employeePayrollData = employeePayrollList2.find(empData => empData.id == employeePayroll.id);
-        if(!employeePayrollData)
-            employeePayrollList2.push(employeePayroll);
-        else{
-            const index = employeePayrollList2
-                          .map(empData => empData.id)
-                          .indexOf(employeePayroll.id);
-            employeePayrollList2.splice(index,1,employeePayroll)
+    let employeePayrollList2 = new Array();
+    if(site_properties.from_local == true){
+        employeePayrollList2 = JSON.parse(localStorage.getItem("EmployeePayrollList"));
+        
+        if(employeePayrollList2 != undefined){
+            let employeePayrollData = employeePayrollList2.find(empData => empData.id == employeePayroll.id);
+            if(!employeePayrollData){
+                employeePayrollList2.push(employeePayroll);
+            }
+            else{
+                const index = employeePayrollList2
+                                .map(empData => empData.id)
+                                .indexOf(employeePayroll.id);
+                employeePayrollList2.splice(index,1,employeePayroll)
+            }
         }
+        else{;
+            employeePayrollList2 = [employeePayroll];
+        }
+        alert(employeePayroll)
+        localStorage.setItem("EmployeePayrollList",JSON.stringify(employeePayrollList2));
     }
     else{
-        employeePayrollList2 = [employeePayroll];
+        let postURL = "http://localhost:3000/employees/";
+        console.log("getting list from server")
+        getPayrollListServer(employeePayrollList2).then(responseText =>{
+            console.log(employeePayrollList2);
+            if(employeePayrollList2 != undefined){
+                let employeePayrollData = employeePayrollList2.find(empData => empData.id == employeePayroll.id);
+                if(!employeePayrollData){
+                    console.log("correct place injection")
+                        makePromiseCall("POST",postURL,true,employeePayroll).then(responseText => {
+                            console.log("Even reaches here");
+                            window.location.href = site_properties.home_page;
+                        }).catch(error => {
+                            alert("POST Error Staus: " + JSON.stringify(error));
+                        });
+                }
+                else{
+                    makePromiseCall("PUT",postURL,true,employeePayroll).then(responseText => {
+                        window.location.href = site_properties.home_page;
+                    }).catch(error => {
+                        alert("PUT Error Staus: " + JSON.stringify(error));
+                    });
+                }
+            }
+            else{
+                    makePromiseCall("POST",postURL,true,employeePayroll).then(responseText => {
+                        window.location.href = site_properties.home_page;
+                    }).catch(error => {
+                        alert("POST Error Staus: " + JSON.stringify(error));
+                    });
+            }
+            console.log(employeePayroll.toString());
+        }).catch(error =>{
+            console.log(error)
+        })
+        
     }
-    alert(employeePayroll.toString());
-    localStorage.setItem("EmployeePayrollList",JSON.stringify(employeePayrollList2))
+}
+
+const getPayrollListServer = (employeePayrollList) => {
+    const getURL = "http://localhost:3000/employees/list";
+        return new Promise((resolve,reject) => {
+            makePromiseCall("GET",getURL).then(responseText => {
+                console.log("Response successfully retrieved");
+                employeePayrollList = JSON.parse(responseText);
+                resolve();
+            }).catch(error => {
+                console.log("GET Error Staus: " + JSON.stringify(error));
+                employeePayrollList = [];
+                reject();
+            });
+        })    
 }
 
 const resetForm = () => {
@@ -219,7 +276,7 @@ const resetForm = () => {
     setValue('#salary','');
     setTextValue('.salary-output','400000')
     unsetSelectedValues('[name=profiel]');
-    resetImage();
+    // resetImage();
 }
 
 const setValue = (id,value) => {

@@ -1,14 +1,41 @@
 {
   "employees": [
     {
-      "department": ["Marketing"],
-	  "gender": "Female",
-	  "id": 1,
-	  "image": "images/Ellipse 1.png",
-	  "name": "Garima Bajaj",
-	  "notes": "",
-	  "salary": "349000",
-	  "startDate": "2020-10-19T18:30:00.000Z"
+      "name": "Garima Mahdav",
+      "image": "images/Ellipse 1.png",
+      "gender": "Female",
+      "department": [
+        "Marketing"
+      ],
+      "salary": "300000",
+      "startDate": "2020-10-31T18:30:00.000Z",
+      "notes": "",
+      "id": 22
+    },
+    {
+      "name": "Shubham Jha",
+      "image": "images/Ellipse -8.png",
+      "gender": "Male",
+      "department": [
+        "Sales",
+        "Marketing"
+      ],
+      "salary": "467000",
+      "startDate": "2020-10-31T18:30:00.000Z",
+      "notes": "",
+      "id": 23
+    },
+    {
+      "name": "Garima Bajaj",
+      "image": "images/Ellipse 1.png",
+      "gender": "Female",
+      "department": [
+        "Sales"
+      ],
+      "salary": "300000",
+      "startDate": "2020-10-31T18:30:00.000Z",
+      "notes": "",
+      "id": 24
     }
   ]
 }
