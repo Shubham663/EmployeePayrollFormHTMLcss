@@ -219,8 +219,13 @@ function createAndUpdateStorage(employeePayroll){
         getPayrollListServer(employeePayrollList2).then(responseText =>{
             console.log(employeePayrollList2);
             if(employeePayrollList2 != undefined){
-                let employeePayrollData = employeePayrollList2.find(empData => empData.id == employeePayroll.id);
-                if(!employeePayrollData){
+                console.log(employeePayroll.id)
+                let employeePayrollData;
+                employeePayrollList2.forEach(empData => {
+                    if(empData.id == employeePayroll.id)
+                        employeePayrollData = employeePayroll
+                });
+                if(employeePayrollData != undefined){
                     console.log("correct place injection")
                         makePromiseCall("POST",postURL,true,employeePayroll).then(responseText => {
                             console.log("Even reaches here");
@@ -230,7 +235,7 @@ function createAndUpdateStorage(employeePayroll){
                         });
                 }
                 else{
-                    makePromiseCall("PUT",postURL,true,employeePayroll).then(responseText => {
+                    makePromiseCall("PUT",(postURL+employeePayroll.id),true,employeePayroll).then(responseText => {
                         window.location.href = site_properties.home_page;
                     }).catch(error => {
                         alert("PUT Error Staus: " + JSON.stringify(error));
@@ -315,17 +320,17 @@ const checkForUpdates = () => {
 };
 
 const setForm = () => {
-    setValue('#name',employeePayrollObj._name);
-    setValue('#notes',employeePayrollObj._notes);
-    let date = stringify_date(employeePayrollObj._startDate).split(" ");
+    setValue('#name',employeePayrollObj.name);
+    setValue('#notes',employeePayrollObj.notes);
+    let date = stringify_date(employeePayrollObj.startDate).split(" ");
     setValue('#day',date[0]);
     setValue('#month',date[1]);
     setValue('#year',date[2]);
-    setValue('#salary',employeePayrollObj._salary);
-    setTextValue('.salary-output',employeePayrollObj._salary)
-    setSelectedValues('[name=profile]',employeePayrollObj._imageSource);
-    setSelectedValues('[name=gender]',employeePayrollObj._gender);
-    setSelectedValues('[name=department]',employeePayrollObj._department);
+    setValue('#salary',employeePayrollObj.salary);
+    setTextValue('.salary-output',employeePayrollObj.salary)
+    setSelectedValues('[name=profile]',employeePayrollObj.image);
+    setSelectedValues('[name=gender]',employeePayrollObj.gender);
+    setSelectedValues('[name=department]',employeePayrollObj.department);
     console.log(employeePayrollObj.id)
 };
 
